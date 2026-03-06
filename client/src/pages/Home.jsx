@@ -20,7 +20,7 @@ export default function Home() {
             Create a Board
           </Link>
         ) : (
-          <a href={`${import.meta.env.VITE_API_URL || ''}/api/auth/discord`} className="btn btn-large btn-discord">
+          <a href="/api/auth/discord" className="btn btn-large btn-discord">
             Login with Discord to Create a Board
           </a>
         )}

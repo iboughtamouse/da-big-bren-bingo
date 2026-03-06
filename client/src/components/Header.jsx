@@ -91,7 +91,7 @@ export default function Header() {
             </button>
           </>
         ) : (
-          <a href={`${import.meta.env.VITE_API_URL || ''}/api/auth/discord`} className="btn btn-small btn-discord">
+          <a href="/api/auth/discord" className="btn btn-small btn-discord">
             Login with Discord
           </a>
         )}
