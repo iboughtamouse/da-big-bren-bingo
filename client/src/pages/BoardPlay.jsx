@@ -22,6 +22,7 @@ export default function BoardPlay() {
       .then((data) => {
         setBoard(data.board);
         setGrid(data.grid);
+        document.title = `${data.board.title} — Da Big Bren Bingo`;
       })
       .catch((err) => setError(err.message));
   }, [id, visitorId]);

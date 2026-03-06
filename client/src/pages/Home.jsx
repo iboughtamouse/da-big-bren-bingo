@@ -1,9 +1,11 @@
-import { useContext } from 'react';
+import { useContext, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { AuthContext } from '../App';
 
 export default function Home() {
   const { user, authLoading } = useContext(AuthContext);
+
+  useEffect(() => { document.title = 'Da Big Bren Bingo'; }, []);
 
   return (
     <div className="home">

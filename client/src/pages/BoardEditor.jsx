@@ -9,6 +9,10 @@ export default function BoardEditor() {
   const { user, authLoading } = useContext(AuthContext);
   const isEditing = Boolean(id);
 
+  useEffect(() => {
+    document.title = isEditing ? 'Edit Board — Da Big Bren Bingo' : 'Create Board — Da Big Bren Bingo';
+  }, [isEditing]);
+
   const [title, setTitle] = useState('');
   const [itemsText, setItemsText] = useState('');
   const [freeSpace, setFreeSpace] = useState(true);
