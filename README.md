@@ -15,9 +15,9 @@ A bingo board web app for live streams. Admin creates a board, shares a link, an
 
 ```
 ┌─────────────────────┐       ┌─────────────────────┐
-│   Vercel (CDN)      │       │   Railway            │
-│   React SPA         │──────▶│   Express API        │
-│   /api/* proxy       │       │   + Postgres DB      │
+│   Vercel (CDN)      │       │   Railway           │
+│   React SPA         │──────▶│   Express API       │
+│   /api/* proxy      │       │   + Postgres DB     │
 └─────────────────────┘       └─────────────────────┘
 ```
 
@@ -56,10 +56,10 @@ This runs the Express API on `http://localhost:3000` and Vite dev server on `htt
 
 ### Commands
 
-| Command            | Description                          |
-| ------------------ | ------------------------------------ |
-| `npm run dev`      | Start server + client simultaneously |
-| `npm run dev:server` | Start Express API only (port 3000) |
+| Command              | Description                            |
+| -------------------- | -------------------------------------- |
+| `npm run dev`        | Start server + client simultaneously   |
+| `npm run dev:server` | Start Express API only (port 3000)     |
 | `npm run dev:client` | Start Vite dev server only (port 5173) |
 
 ## Project Structure
