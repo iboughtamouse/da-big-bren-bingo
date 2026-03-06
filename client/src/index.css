@@ -342,6 +342,12 @@ a:hover {
   margin-bottom: 1rem;
 }
 
+.board-play-layout {
+  position: relative;
+  display: flex;
+  justify-content: center;
+}
+
 .board-play-area {
   position: relative;
   width: 100%;

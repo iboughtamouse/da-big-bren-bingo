@@ -1,22 +1,14 @@
-.drawing-container {
+.drawing-toolbar {
+  position: absolute;
+  right: calc(100% + 0.75rem);
+  top: 0;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  width: 100%;
-}
-
-.drawing-toolbar {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1rem;
-  padding: 0.75rem 1rem;
+  gap: 0.5rem;
+  padding: 0.5rem;
   background: var(--color-surface);
   border: 2px solid var(--color-border);
   border-radius: 8px;
-  margin-bottom: 0.5rem;
-  width: 100%;
-  max-width: 650px;
-  position: relative;
   z-index: 20;
   pointer-events: all;
 }
@@ -37,18 +29,23 @@
 
 .toolbar-group {
   display: flex;
-  gap: 0.25rem;
-  flex-wrap: wrap;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.toolbar-group.toolbar-row {
+  flex-direction: row;
 }
 
 .toolbar-btn {
-  padding: 0.3rem 0.6rem;
+  padding: 0.3rem;
   border: 2px solid var(--color-border);
   border-radius: 6px;
   background: var(--color-bg);
   color: #ffffff;
   cursor: pointer;
-  font-size: 0.8rem;
+  font-size: 0.9rem;
+  line-height: 1;
   transition: all 0.15s;
 }
 
@@ -68,12 +65,14 @@
 }
 
 .color-group {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
   gap: 0.2rem;
 }
 
 .color-btn {
-  width: 24px;
-  height: 24px;
+  width: 22px;
+  height: 22px;
   border-radius: 50%;
   border: 2px solid var(--color-border);
   cursor: pointer;

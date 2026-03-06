@@ -1,6 +1,7 @@
 .bingo-grid {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
+  grid-template-rows: repeat(5, 1fr);
   gap: 2px;
   width: 100%;
   max-width: 650px;

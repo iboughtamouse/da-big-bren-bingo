@@ -4,7 +4,7 @@ import { api } from '../lib/api';
 import { getVisitorId } from '../lib/visitor';
 import { AuthContext } from '../App';
 import BingoGrid from '../components/BingoGrid';
-import DrawingCanvas from '../components/DrawingCanvas';
+import { useDrawingState, DrawingToolbar, DrawingStage } from '../components/DrawingCanvas';
 
 export default function BoardPlay() {
   const { id } = useParams();
@@ -15,6 +15,7 @@ export default function BoardPlay() {
   const [canvasSize, setCanvasSize] = useState({ width: 650, height: 650 });
   const gridRef = useRef(null);
   const visitorId = getVisitorId();
+  const drawing = useDrawingState(id, visitorId);
 
   useEffect(() => {
     api
@@ -69,17 +70,19 @@ export default function BoardPlay() {
       )}
 
       <h2 className="bingo-title">{board.title}</h2>
-      <div className="board-play-area">
-        <div ref={gridRef}>
-          <BingoGrid grid={grid} />
-        </div>
-        <div className="canvas-overlay">
-          <DrawingCanvas
-            boardId={id}
-            visitorId={visitorId}
-            width={canvasSize.width}
-            height={canvasSize.height}
-          />
+      <div className="board-play-layout">
+        <div className="board-play-area">
+          <DrawingToolbar {...drawing} />
+          <div ref={gridRef}>
+            <BingoGrid grid={grid} />
+          </div>
+          <div className="canvas-overlay">
+            <DrawingStage
+              width={canvasSize.width}
+              height={canvasSize.height}
+              drawing={drawing}
+            />
+          </div>
         </div>
       </div>
 
