@@ -10,6 +10,9 @@ import boardRoutes from './routes/boards.js';
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+// Trust proxy (Railway terminates SSL at the load balancer)
+app.set('trust proxy', 1);
+
 // Middleware
 app.use(express.json());
 app.use(
@@ -35,7 +38,7 @@ app.use(
       secure: process.env.NODE_ENV === 'production',
       httpOnly: true,
       maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
-      sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+      sameSite: 'lax',
     },
   })
 );
