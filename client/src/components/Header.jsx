@@ -72,7 +72,7 @@ export default function Header() {
                     boards.map((b) => (
                       <Link
                         key={b.id}
-                        to={`/board/${b.id}/edit`}
+                        to={`/board/${b.id}`}
                         className="dropdown-item"
                         onClick={() => setShowBoards(false)}
                       >

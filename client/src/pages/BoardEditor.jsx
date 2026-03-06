@@ -1,5 +1,5 @@
 import { useState, useEffect, useContext } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, Link } from 'react-router-dom';
 import { AuthContext } from '../App';
 import { api } from '../lib/api';
 
@@ -99,11 +99,16 @@ export default function BoardEditor() {
       <h1>{isEditing ? 'Edit Board' : 'Create a Board'}</h1>
 
       {isEditing && (
-        <div className="warning-banner">
-          ⚠️ Editing this board will shuffle everyone's layouts next time they
-          load it. Anyone who already has it open won't be affected until they
-          refresh.
-        </div>
+        <>
+          <div className="warning-banner">
+            ⚠️ Editing this board will shuffle everyone's layouts next time they
+            load it. Anyone who already has it open won't be affected until they
+            refresh.
+          </div>
+          <Link to={`/board/${id}`} className="btn btn-small">
+            👁 View Board
+          </Link>
+        </>
       )}
 
       {error && <div className="error-banner">{error}</div>}

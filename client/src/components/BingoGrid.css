@@ -40,9 +40,8 @@
   font-weight: 700;
   font-size: 1.1rem;
   font-family: 'Press Start 2P', monospace;
-  color: var(--color-magenta);
-  text-shadow: 0 0 15px rgba(255, 0, 255, 0.8);
-  animation: blink 2s steps(2) infinite;
+  color: var(--color-yellow);
+  text-shadow: 0 0 10px rgba(255, 255, 0, 0.6);
 }
 
 .cell-text {
