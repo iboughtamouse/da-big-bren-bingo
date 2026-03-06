@@ -35,6 +35,10 @@
 - Stream link drops can send 50–500 users simultaneously. Vercel CDN handles the static asset burst without breaking a sweat. Railway only sees API calls (lightweight JSON), not file serving.
 - Railway hobby plan has limited compute. Offloading static assets to Vercel keeps it focused on what matters.
 
+### Cross-Origin Proxy
+
+Vercel rewrites `/api/*` requests to the Railway backend (configured in `client/vercel.json`). This keeps all traffic on the same origin from the browser's perspective, which is critical for session cookies — browsers block third-party cookies even with `SameSite=None`. The Express server sets `trust proxy` so it correctly sees proxied requests as HTTPS.
+
 ## Authentication
 
 ### Admin: Discord OAuth 2.0
@@ -58,6 +62,7 @@ CREATE TABLE users (
     id            SERIAL PRIMARY KEY,
     discord_id    VARCHAR(255) UNIQUE NOT NULL,
     username      VARCHAR(255) NOT NULL,
+    avatar        VARCHAR(255),
     created_at    TIMESTAMPTZ DEFAULT NOW()
 );
 
@@ -100,6 +105,7 @@ Visitor state (which squares are marked) is stored entirely in the visitor's loc
 
 | Method | Path              | Description                              |
 | ------ | ----------------- | ---------------------------------------- |
+| GET    | `/api/boards`     | List boards for current user (auth required) |
 | POST   | `/api/boards`     | Create a new board (auth required)       |
 | GET    | `/api/boards/:id` | Get board metadata + full item pool      |
 | PUT    | `/api/boards/:id` | Update board (auth required, owner only) |
@@ -137,10 +143,11 @@ Including `board.updatedAt` in the seed means that if the admin edits the board,
 | Route             | Component   | Purpose                                         |
 | ----------------- | ----------- | ----------------------------------------------- |
 | `/`               | Home        | Landing page, "Create a Board" CTA              |
-| `/login`          | Login       | Discord OAuth initiation                        |
 | `/create`         | BoardEditor | Create a new board (auth required)              |
 | `/board/:id/edit` | BoardEditor | Edit existing board (auth required, owner only) |
 | `/board/:id`      | BoardPlay   | Viewer experience — shuffled board + marking    |
+
+Discord login is initiated via a link in the Header (`<a href="/api/auth/discord">`) — there is no dedicated login page.
 
 ## Project Structure
 
@@ -151,6 +158,7 @@ da-big-bren-bingo/
 │   └── ARCHITECTURE.md
 ├── server/                  # Express backend
 │   ├── index.js             # Entry point
+│   ├── env.js               # dotenv loader
 │   ├── db/
 │   │   ├── connection.js    # Postgres connection
 │   │   └── schema.sql       # DDL
@@ -174,12 +182,14 @@ da-big-bren-bingo/
 │   │   ├── components/
 │   │   │   ├── BingoGrid.jsx
 │   │   │   ├── DrawingCanvas.jsx  # Konva canvas overlay + toolbar
+│   │   │   ├── Footer.jsx         # Retro footer
 │   │   │   └── Header.jsx
 │   │   └── lib/
 │   │       └── api.js       # API client
 │   └── public/
 ├── package.json             # Root package (workspace)
-└── railway.json             # Railway deployment config
+├── railway.json             # Railway deployment config
+└── .env.example             # Environment variable template
 ```
 
 ## Key Technical Decisions
