@@ -24,6 +24,7 @@ export const api = {
   logout: () => request('/api/auth/logout', { method: 'POST' }),
 
   // Boards
+  getMyBoards: () => request('/api/boards'),
   createBoard: (data) =>
     request('/api/boards', { method: 'POST', body: JSON.stringify(data) }),
   getBoard: (id) => request(`/api/boards/${encodeURIComponent(id)}`),

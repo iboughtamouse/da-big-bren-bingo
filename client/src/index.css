@@ -74,6 +74,58 @@ a:hover {
   border-radius: 50%;
 }
 
+/* Boards Dropdown */
+.boards-dropdown-wrapper {
+  position: relative;
+}
+
+.boards-dropdown {
+  position: absolute;
+  top: calc(100% + 0.5rem);
+  right: 0;
+  min-width: 220px;
+  max-height: 320px;
+  overflow-y: auto;
+  background: var(--color-surface);
+  border: 2px solid var(--color-border);
+  border-radius: 8px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+  z-index: 100;
+}
+
+.dropdown-item {
+  display: block;
+  padding: 0.6rem 1rem;
+  color: var(--color-text);
+  text-decoration: none;
+  font-size: 0.9rem;
+  border-bottom: 1px solid var(--color-border);
+  transition: background 0.15s;
+}
+
+.dropdown-item:last-child {
+  border-bottom: none;
+}
+
+.dropdown-item:hover {
+  background: var(--color-accent-soft);
+}
+
+.dropdown-loading {
+  color: var(--color-muted);
+}
+
+.dropdown-empty {
+  padding: 1rem;
+  text-align: center;
+  color: var(--color-muted);
+  font-size: 0.9rem;
+}
+
+.dropdown-empty p {
+  margin-bottom: 0.75rem;
+}
+
 /* Main */
 .main {
   max-width: 900px;

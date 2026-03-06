@@ -6,6 +6,15 @@ import { generateGrid } from '../lib/shuffle.js';
 
 const router = Router();
 
+// List boards for the logged-in user
+router.get('/', requireAuth, async (req, res) => {
+  const result = await pool.query(
+    'SELECT id, title, created_at FROM boards WHERE user_id = $1 ORDER BY created_at DESC',
+    [req.user.id]
+  );
+  res.json({ boards: result.rows });
+});
+
 // Create a new board
 router.post('/', requireAuth, async (req, res) => {
   const { title, items, freeSpace } = req.body;
