@@ -14,6 +14,7 @@
   --color-danger: #ff0000;
 
   font-family: 'Comic Neue', 'Comic Sans MS', cursive, sans-serif;
+  font-size: 16px;
   line-height: 1.5;
   font-weight: 400;
   color: var(--color-text);
