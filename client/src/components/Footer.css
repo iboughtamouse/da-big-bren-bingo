@@ -1,0 +1,81 @@
+.retro-footer {
+  margin-top: auto;
+  padding: 1.5rem 1rem;
+  border-top: 4px ridge var(--color-magenta);
+  background: linear-gradient(180deg, #0a0033, #000011);
+  text-align: center;
+  font-family: 'Comic Neue', cursive;
+  color: var(--color-accent);
+}
+
+.footer-construction {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 0.65rem;
+  color: var(--color-yellow);
+  text-shadow: 0 0 8px rgba(255, 255, 0, 0.6);
+  animation: blink 1.5s steps(2) infinite;
+}
+
+.footer-badges {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.footer-badge {
+  padding: 0.25rem 0.6rem;
+  border: 2px outset var(--color-accent);
+  background: linear-gradient(180deg, #1a0044, #0a0033);
+  font-family: 'VT323', monospace;
+  font-size: 0.85rem;
+  color: var(--color-lime);
+  text-shadow: 0 0 4px rgba(0, 255, 0, 0.5);
+  letter-spacing: 0.03em;
+}
+
+.footer-counter {
+  margin-bottom: 0.75rem;
+  font-family: 'VT323', monospace;
+  font-size: 1rem;
+  color: var(--color-text);
+}
+
+.counter-digits {
+  display: inline-flex;
+  gap: 2px;
+  margin-left: 0.3rem;
+}
+
+.counter-digit {
+  background: #111;
+  border: 1px inset var(--color-accent);
+  padding: 0.1rem 0.3rem;
+  font-family: 'VT323', monospace;
+  font-size: 1.1rem;
+  color: var(--color-lime);
+  text-shadow: 0 0 6px rgba(0, 255, 0, 0.8);
+  min-width: 1.2rem;
+  text-align: center;
+}
+
+.footer-best-viewed {
+  font-size: 0.75rem;
+  color: var(--color-muted);
+  font-style: italic;
+}
+
+.footer-best-viewed a {
+  color: var(--color-accent);
+  text-decoration: none;
+}
+
+.footer-best-viewed a:hover {
+  text-decoration: underline;
+}

@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { useState, useEffect, createContext } from 'react';
 import { api } from './lib/api';
 import Header from './components/Header';
+import Footer from './components/Footer';
 import Home from './pages/Home';
 import BoardEditor from './pages/BoardEditor';
 import BoardPlay from './pages/BoardPlay';
@@ -38,6 +39,7 @@ function App() {
             <Route path="/board/:id" element={<BoardPlay />} />
           </Routes>
         </main>
+        <Footer />
       </BrowserRouter>
     </AuthContext.Provider>
   );
