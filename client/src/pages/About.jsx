@@ -36,6 +36,13 @@ export default function About() {
           </li>
         </ol>
         <p>
+          You need at least <strong>24 items</strong> with a free center space,
+          or <strong>25 items</strong> without one. There's no maximum — if you
+          add more items than there are board slots, each viewer gets a random
+          subset picked from the pool. More items means more variety across
+          viewers' boards.
+        </p>
+        <p>
           You can make as many boards as you want. You can also edit or delete
           them later from the edit page.
         </p>
