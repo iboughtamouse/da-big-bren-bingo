@@ -100,8 +100,9 @@ export default function BoardEditor() {
 
       {isEditing && (
         <div className="warning-banner">
-          ⚠️ Editing this board will reset everyone's shuffled boards. Active
-          players will get new layouts.
+          ⚠️ Editing this board will shuffle everyone's layouts next time they
+          load it. Anyone who already has it open won't be affected until they
+          refresh.
         </div>
       )}
 

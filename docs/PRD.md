@@ -67,10 +67,19 @@ The original inspiration: Bren currently screenshots a bingo board into MS Paint
 - Real-time notifications ("someone got bingo!")
 - Viewer identity / Discord login for viewers
 - Leaderboard or scoring
-- Multiple board management dashboard
 - Board templates or themes
 - Board expiration or archival
 - Mobile drawing optimization (functional but not a priority)
+
+### Planned: Live Board Refresh (Polling)
+
+When the admin edits a board, active viewers should see the updated board without manually refreshing. The plan:
+
+- `BoardPlay` page polls `GET /api/boards/:id` every 5 seconds, comparing `updatedAt`
+- If `updatedAt` changed, re-fetch the play board (new shuffle based on new seed)
+- Cheap: one PK lookup per player per 5s — negligible load even at 500 concurrent players
+- No WebSockets needed — polling is simpler to implement and deploy
+- Viewer's drawing state resets on board change (drawings are tied to the old layout)
 
 ## Constraints
 
