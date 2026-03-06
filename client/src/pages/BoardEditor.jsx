@@ -20,6 +20,8 @@ export default function BoardEditor() {
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState(null);
   const [showEditWarning, setShowEditWarning] = useState(false);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [deleting, setDeleting] = useState(false);
 
   // Load existing board for editing
   useEffect(() => {
@@ -87,6 +89,22 @@ export default function BoardEditor() {
     } finally {
       setSaving(false);
       setShowEditWarning(false);
+    }
+  };
+
+  const handleDelete = async () => {
+    if (!showDeleteConfirm) {
+      setShowDeleteConfirm(true);
+      return;
+    }
+    setDeleting(true);
+    try {
+      await api.deleteBoard(id);
+      navigate('/');
+    } catch (err) {
+      setError(err.message);
+      setDeleting(false);
+      setShowDeleteConfirm(false);
     }
   };
 
@@ -177,7 +195,7 @@ export default function BoardEditor() {
         )}
         <button
           onClick={handleSubmit}
-          disabled={saving || itemCount < slotsNeeded}
+          disabled={saving || deleting || itemCount < slotsNeeded}
           className="btn btn-large"
         >
           {saving
@@ -189,6 +207,23 @@ export default function BoardEditor() {
                 : 'Create Board'}
         </button>
       </div>
+
+      {isEditing && (
+        <div className="danger-zone">
+          {showDeleteConfirm && (
+            <div className="confirm-banner">
+              🚨 This will permanently delete the board and all its items. Hit delete again to confirm.
+            </div>
+          )}
+          <button
+            onClick={handleDelete}
+            disabled={deleting}
+            className="btn btn-small btn-danger"
+          >
+            {deleting ? 'Deleting...' : showDeleteConfirm ? 'Yes, Delete Forever' : '🗑 Delete Board'}
+          </button>
+        </div>
+      )}
     </div>
   );
 }
