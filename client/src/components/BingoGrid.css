@@ -1,0 +1,38 @@
+.bingo-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 2px;
+  width: 100%;
+  max-width: 650px;
+  aspect-ratio: 1;
+  background: var(--color-border);
+  border: 3px solid var(--color-border);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.bingo-cell {
+  background: var(--color-surface);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem;
+  text-align: center;
+  font-size: 0.85rem;
+  font-weight: 500;
+  line-height: 1.2;
+  user-select: none;
+  overflow: hidden;
+  word-break: break-word;
+}
+
+.bingo-cell.free-space {
+  background: var(--color-accent-soft);
+  font-weight: 700;
+  font-size: 1rem;
+  color: var(--color-accent);
+}
+
+.cell-text {
+  pointer-events: none;
+}
