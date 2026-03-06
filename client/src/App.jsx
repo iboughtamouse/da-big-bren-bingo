@@ -4,6 +4,7 @@ import { api } from './lib/api';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import Home from './pages/Home';
+import About from './pages/About';
 import BoardEditor from './pages/BoardEditor';
 import BoardPlay from './pages/BoardPlay';
 import './App.css';
@@ -34,6 +35,7 @@ function App() {
         <main className="main">
           <Routes>
             <Route path="/" element={<Home />} />
+            <Route path="/about" element={<About />} />
             <Route path="/create" element={<BoardEditor />} />
             <Route path="/board/:id/edit" element={<BoardEditor />} />
             <Route path="/board/:id" element={<BoardPlay />} />

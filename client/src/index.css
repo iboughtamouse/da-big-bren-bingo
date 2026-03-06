@@ -464,6 +464,70 @@ a:hover {
   color: var(--color-danger);
 }
 
+/* About */
+.about {
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.about h1 {
+  margin: 0 0 1.5rem;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 1.5rem;
+  color: var(--color-accent);
+  text-shadow: 0 0 10px rgba(0, 255, 255, 0.6);
+}
+
+.about h2 {
+  font-family: 'Bangers', cursive;
+  font-size: 1.6rem;
+  color: var(--color-yellow);
+  margin: 0 0 0.75rem;
+  letter-spacing: 0.05em;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+}
+
+.about p,
+.about li {
+  font-size: 1.05rem;
+  line-height: 1.7;
+  color: var(--color-green);
+}
+
+.about a {
+  color: var(--color-accent);
+  text-decoration: underline;
+}
+
+.about a:hover {
+  color: var(--color-magenta);
+}
+
+.about ol,
+.about ul {
+  padding-left: 1.5rem;
+  margin: 0.5rem 0 1rem;
+}
+
+.about li {
+  margin-bottom: 0.5rem;
+}
+
+.about-section {
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid rgba(255, 255, 0, 0.15);
+}
+
+.about em {
+  color: var(--color-yellow);
+  font-style: italic;
+}
+
+.about strong {
+  color: var(--color-magenta);
+}
+
 /* Board Play */
 .board-play {
   display: flex;

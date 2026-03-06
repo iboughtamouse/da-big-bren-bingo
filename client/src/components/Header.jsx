@@ -41,6 +41,9 @@ export default function Header() {
         🎯 Da Big Bren Bingo
       </Link>
       <nav className="header-nav">
+        <Link to="/about" className="btn btn-small btn-ghost">
+          About
+        </Link>
         {authLoading ? null : user ? (
           <>
             <span className="header-user">
