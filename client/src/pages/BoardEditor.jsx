@@ -99,16 +99,11 @@ export default function BoardEditor() {
       <h1>{isEditing ? 'Edit Board' : 'Create a Board'}</h1>
 
       {isEditing && (
-        <>
-          <div className="warning-banner">
-            ⚠️ Editing this board will shuffle everyone's layouts next time they
-            load it. Anyone who already has it open won't be affected until they
-            refresh.
-          </div>
-          <Link to={`/board/${id}`} className="btn btn-small">
-            👁 View Board
-          </Link>
-        </>
+        <div className="warning-banner">
+          ⚠️ Editing this board will shuffle everyone's layouts next time they
+          load it. Anyone who already has it open won't be affected until they
+          refresh.
+        </div>
       )}
 
       {error && <div className="error-banner">{error}</div>}
@@ -174,19 +169,26 @@ export default function BoardEditor() {
         </div>
       )}
 
-      <button
-        onClick={handleSubmit}
-        disabled={saving || itemCount < slotsNeeded}
-        className="btn btn-large"
-      >
-        {saving
-          ? 'Saving...'
-          : showEditWarning
-            ? 'Yes, Save Changes'
-            : isEditing
-              ? 'Save Changes'
-              : 'Create Board'}
-      </button>
+      <div className="editor-actions">
+        {isEditing && (
+          <Link to={`/board/${id}`} className="btn btn-large btn-ghost">
+            👁 View Board
+          </Link>
+        )}
+        <button
+          onClick={handleSubmit}
+          disabled={saving || itemCount < slotsNeeded}
+          className="btn btn-large"
+        >
+          {saving
+            ? 'Saving...'
+            : showEditWarning
+              ? 'Yes, Save Changes'
+              : isEditing
+                ? 'Save Changes'
+                : 'Create Board'}
+        </button>
+      </div>
     </div>
   );
 }

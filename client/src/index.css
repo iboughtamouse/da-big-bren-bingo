@@ -321,6 +321,14 @@ a:hover {
   margin: 0 auto;
 }
 
+.editor-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
 .editor h1 {
   margin: 0 0 1.5rem;
   font-family: 'Press Start 2P', monospace;
