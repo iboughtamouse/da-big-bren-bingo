@@ -9,6 +9,7 @@ export default function BingoGrid({ grid }) {
           <div
             key={i}
             className={`bingo-cell ${cell.isFreeSpace ? 'free-space' : ''}`}
+            title={cell.isFreeSpace ? undefined : cell.text}
           >
             <span className="cell-text">{cell.text}</span>
           </div>
