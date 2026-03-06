@@ -55,7 +55,7 @@ export default function Header() {
             </span>
             <div className="boards-dropdown-wrapper" ref={dropdownRef}>
               <button onClick={toggleBoards} className="btn btn-small">
-                📋 My Boards
+                📋 My Boards {showBoards ? '▲' : '▼'}
               </button>
               {showBoards && (
                 <div className="boards-dropdown">
