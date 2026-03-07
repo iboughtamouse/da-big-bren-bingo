@@ -11,6 +11,8 @@ A bingo board web app for live streams. Admin creates a board, shares a link, an
 3. Each **viewer** gets a unique deterministic shuffle of the same item pool
 4. Viewers mark squares by drawing on a canvas overlay — scribble, circle, X, whatever
 
+Boards can include a free center space, and creators can optionally customize that center text.
+
 ## Architecture
 
 ```

@@ -28,6 +28,7 @@ A web application for creating and sharing bingo boards, designed for live strea
 - Admin enters a board title
 - Admin provides a pool of bingo items (newline-separated or comma-separated — we parse both)
 - Admin toggles whether the board has a free center space
+- If free space is enabled, admin can optionally customize the free-space text; default is "FREE"
 - **Minimum pool size:** 24 items (with free space) or 25 items (without free space) for a 5×5 grid
 - Board is saved and admin receives a shareable link
 
@@ -44,7 +45,7 @@ A web application for creating and sharing bingo boards, designed for live strea
 - If the pool equals exactly the number of slots, all items are used
 - The selected items are shuffled into a 5×5 grid, unique to this visitor
 - The shuffle and selection are **deterministic** — same visitor ID always produces the same board
-- If a free space is enabled, the center square is always "FREE"
+- If a free space is enabled, the center square uses the board's configured free-space text, defaulting to "FREE"
 
 ### Square Marking — The MS Paint Experience
 

@@ -1,6 +1,8 @@
 import seedrandom from 'seedrandom';
 import { createHash } from 'crypto';
 
+const DEFAULT_FREE_SPACE_TEXT = 'FREE';
+
 /**
  * Generate a deterministic seed from board ID, visitor ID, and board update time.
  * Including updatedAt ensures edits produce fresh shuffles.
@@ -60,7 +62,7 @@ export function generateGrid(board, items, visitorId) {
   let itemIndex = 0;
   for (let i = 0; i < 25; i++) {
     if (board.free_space && i === 12) {
-      cells.push({ text: 'FREE', isFreeSpace: true });
+      cells.push({ text: board.free_space_text || DEFAULT_FREE_SPACE_TEXT, isFreeSpace: true });
     } else {
       cells.push({ text: selected[itemIndex], isFreeSpace: false });
       itemIndex++;
