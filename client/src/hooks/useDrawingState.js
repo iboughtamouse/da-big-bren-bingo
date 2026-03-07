@@ -24,7 +24,7 @@ function loadStoredLines(storageKey) {
 }
 
 export function useDrawingState(boardId, visitorId) {
-  const [tool, setTool] = useState('brush');
+  const [tool, setTool] = useState('highlighter');
   const [color, setColor] = useState('#FF0000');
   const [size, setSize] = useState('medium');
   const storageKey = `${STORAGE_PREFIX}${boardId}_${visitorId}`;
