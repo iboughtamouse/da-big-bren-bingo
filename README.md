@@ -79,6 +79,7 @@ da-big-bren-bingo/
 
 - [ARCHITECTURE.md](docs/ARCHITECTURE.md) — Stack decisions, deployment, auth flow, database schema, API design, shuffling algorithm
 - [PRD.md](docs/PRD.md) — Product requirements and feature spec
+- [CONTRIBUTING.md](CONTRIBUTING.md) — Collaboration style, git workflow, pull request expectations, and testing philosophy
 
 ## License
 
