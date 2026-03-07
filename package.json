@@ -16,8 +16,15 @@
     "client"
   ],
   "scripts": {
+    "prepare": "husky",
+    "commitlint": "commitlint --edit",
     "dev:server": "npm run dev --workspace=server",
     "dev:client": "npm run dev --workspace=client",
     "dev": "npm run dev:server & npm run dev:client"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^20.1.0",
+    "@commitlint/config-conventional": "^20.0.0",
+    "husky": "^9.1.7"
   }
 }
