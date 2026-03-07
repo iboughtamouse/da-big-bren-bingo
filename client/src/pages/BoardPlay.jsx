@@ -2,9 +2,15 @@ import { useState, useEffect, useRef, useContext } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { api } from '../lib/api';
 import { getVisitorId } from '../lib/visitor';
-import { AuthContext } from '../App';
+import { AuthContext } from '../lib/auth-context';
+import { useDrawingState } from '../hooks/useDrawingState';
 import BingoGrid from '../components/BingoGrid';
-import { useDrawingState, DrawingToolbar, DrawingStage } from '../components/DrawingCanvas';
+import { DrawingToolbar, DrawingStage } from '../components/DrawingCanvas';
+
+function BoardDrawingController({ boardId, visitorId, children }) {
+  const drawing = useDrawingState(boardId, visitorId);
+  return children(drawing);
+}
 
 export default function BoardPlay() {
   const { id } = useParams();
@@ -15,7 +21,6 @@ export default function BoardPlay() {
   const [canvasSize, setCanvasSize] = useState({ width: 650, height: 650 });
   const gridRef = useRef(null);
   const visitorId = getVisitorId();
-  const drawing = useDrawingState(id, visitorId);
 
   useEffect(() => {
     api
@@ -72,17 +77,27 @@ export default function BoardPlay() {
       <h2 className="bingo-title">{board.title}</h2>
       <div className="board-play-layout">
         <div className="board-play-area">
-          <DrawingToolbar {...drawing} />
-          <div ref={gridRef}>
-            <BingoGrid grid={grid} />
-          </div>
-          <div className="canvas-overlay">
-            <DrawingStage
-              width={canvasSize.width}
-              height={canvasSize.height}
-              drawing={drawing}
-            />
-          </div>
+          <BoardDrawingController
+            key={`${id}:${visitorId}`}
+            boardId={id}
+            visitorId={visitorId}
+          >
+            {(drawing) => (
+              <>
+                <DrawingToolbar {...drawing} />
+                <div ref={gridRef}>
+                  <BingoGrid grid={grid} />
+                </div>
+                <div className="canvas-overlay">
+                  <DrawingStage
+                    width={canvasSize.width}
+                    height={canvasSize.height}
+                    drawing={drawing}
+                  />
+                </div>
+              </>
+            )}
+          </BoardDrawingController>
         </div>
       </div>
 

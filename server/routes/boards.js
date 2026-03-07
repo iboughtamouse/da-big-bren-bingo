@@ -5,6 +5,53 @@ import { requireAuth } from '../middleware/auth.js';
 import { generateGrid } from '../lib/shuffle.js';
 
 const router = Router();
+const MAX_ITEMS = 500;
+const MAX_ITEM_LENGTH = 255;
+const MAX_TITLE_LENGTH = 255;
+
+function normalizeItems(items) {
+  if (!Array.isArray(items)) {
+    return [];
+  }
+
+  return items
+    .map((item) => (typeof item === 'string' ? item.trim() : ''))
+    .filter(Boolean);
+}
+
+function validateBoardPayload(title, items, freeSpace) {
+  if (!title || !title.trim()) {
+    return 'Title is required';
+  }
+
+  if (title.trim().length > MAX_TITLE_LENGTH) {
+    return `Title must be ${MAX_TITLE_LENGTH} characters or fewer`;
+  }
+
+  if (!Array.isArray(items)) {
+    return 'Items are required';
+  }
+
+  const normalizedItems = normalizeItems(items);
+  if (normalizedItems.length === 0) {
+    return 'Items are required';
+  }
+
+  const slotsNeeded = freeSpace !== false ? 24 : 25;
+  if (normalizedItems.length < slotsNeeded) {
+    return `Need at least ${slotsNeeded} items for a 5×5 board${freeSpace !== false ? ' (with free space)' : ''}`;
+  }
+
+  if (normalizedItems.length > MAX_ITEMS) {
+    return `Too many items. Max ${MAX_ITEMS}.`;
+  }
+
+  if (normalizedItems.some((item) => item.length > MAX_ITEM_LENGTH)) {
+    return `Each item must be ${MAX_ITEM_LENGTH} characters or fewer`;
+  }
+
+  return null;
+}
 
 // List boards for the logged-in user
 router.get('/', requireAuth, async (req, res) => {
@@ -18,21 +65,13 @@ router.get('/', requireAuth, async (req, res) => {
 // Create a new board
 router.post('/', requireAuth, async (req, res) => {
   const { title, items, freeSpace } = req.body;
+  const validationError = validateBoardPayload(title, items, freeSpace);
 
-  if (!title || !title.trim()) {
-    return res.status(400).json({ error: 'Title is required' });
+  if (validationError) {
+    return res.status(400).json({ error: validationError });
   }
 
-  if (!Array.isArray(items) || items.length === 0) {
-    return res.status(400).json({ error: 'Items are required' });
-  }
-
-  const slotsNeeded = freeSpace !== false ? 24 : 25;
-  if (items.length < slotsNeeded) {
-    return res.status(400).json({
-      error: `Need at least ${slotsNeeded} items for a 5×5 board${freeSpace !== false ? ' (with free space)' : ''}`,
-    });
-  }
+  const normalizedItems = normalizeItems(items);
 
   const boardId = nanoid(12);
   const client = await pool.connect();
@@ -45,14 +84,11 @@ router.post('/', requireAuth, async (req, res) => {
       [boardId, req.user.id, title.trim(), freeSpace !== false]
     );
 
-    for (let i = 0; i < items.length; i++) {
-      const text = items[i].trim();
-      if (text) {
-        await client.query(
-          `INSERT INTO board_items (board_id, text, sort_order) VALUES ($1, $2, $3)`,
-          [boardId, text, i]
-        );
-      }
+    for (let i = 0; i < normalizedItems.length; i++) {
+      await client.query(
+        `INSERT INTO board_items (board_id, text, sort_order) VALUES ($1, $2, $3)`,
+        [boardId, normalizedItems[i], i]
+      );
     }
 
     await client.query('COMMIT');
@@ -103,6 +139,7 @@ router.get('/:id', async (req, res) => {
 router.put('/:id', requireAuth, async (req, res) => {
   const { id } = req.params;
   const { title, items, freeSpace } = req.body;
+  const validationError = validateBoardPayload(title, items, freeSpace);
 
   // Verify ownership
   const boardResult = await pool.query('SELECT * FROM boards WHERE id = $1', [id]);
@@ -113,20 +150,11 @@ router.put('/:id', requireAuth, async (req, res) => {
     return res.status(403).json({ error: 'Not authorized to edit this board' });
   }
 
-  if (!title || !title.trim()) {
-    return res.status(400).json({ error: 'Title is required' });
+  if (validationError) {
+    return res.status(400).json({ error: validationError });
   }
 
-  if (!Array.isArray(items) || items.length === 0) {
-    return res.status(400).json({ error: 'Items are required' });
-  }
-
-  const slotsNeeded = freeSpace !== false ? 24 : 25;
-  if (items.length < slotsNeeded) {
-    return res.status(400).json({
-      error: `Need at least ${slotsNeeded} items for a 5×5 board${freeSpace !== false ? ' (with free space)' : ''}`,
-    });
-  }
+  const normalizedItems = normalizeItems(items);
 
   const client = await pool.connect();
 
@@ -141,14 +169,11 @@ router.put('/:id', requireAuth, async (req, res) => {
     // Replace all items
     await client.query('DELETE FROM board_items WHERE board_id = $1', [id]);
 
-    for (let i = 0; i < items.length; i++) {
-      const text = items[i].trim();
-      if (text) {
-        await client.query(
-          `INSERT INTO board_items (board_id, text, sort_order) VALUES ($1, $2, $3)`,
-          [id, text, i]
-        );
-      }
+    for (let i = 0; i < normalizedItems.length; i++) {
+      await client.query(
+        `INSERT INTO board_items (board_id, text, sort_order) VALUES ($1, $2, $3)`,
+        [id, normalizedItems[i], i]
+      );
     }
 
     await client.query('COMMIT');

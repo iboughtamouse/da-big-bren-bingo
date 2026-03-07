@@ -37,10 +37,10 @@ export default function About() {
         </ol>
         <p>
           You need at least <strong>24 items</strong> with a free center space,
-          or <strong>25 items</strong> without one. There's no maximum — if you
-          add more items than there are board slots, each viewer gets a random
-          subset picked from the pool. More items means more variety across
-          viewers' boards.
+          or <strong>25 items</strong> without one. You can add up to{' '}
+          <strong>500 items</strong>. If you add more items than there are board
+          slots, each viewer gets a random subset picked from the pool. More
+          items means more variety across viewers' boards.
         </p>
         <p>
           You can make as many boards as you want. You can also edit or delete
@@ -75,8 +75,9 @@ export default function About() {
             Pen, eraser, colors, stroke sizes.
           </li>
           <li>
-            <strong>Nothing is saved server-side</strong> — if you navigate away
-            or refresh, your drawings are gone. Want to keep it? Screenshot it.
+            <strong>Nothing is saved server-side</strong> — your drawings stay on
+            this device in local storage for that board, but they are not shared
+            with anyone else and won't follow you to another browser or device.
           </li>
         </ul>
       </section>

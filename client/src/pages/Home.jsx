@@ -1,6 +1,6 @@
 import { useContext, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { AuthContext } from '../App';
+import { AuthContext } from '../lib/auth-context';
 
 export default function Home() {
   const { user, authLoading } = useContext(AuthContext);

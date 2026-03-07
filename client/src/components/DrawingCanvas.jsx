@@ -1,4 +1,3 @@
-import { useState, useRef, useCallback, useEffect } from 'react';
 import { Stage, Layer, Line } from 'react-konva';
 import './DrawingCanvas.css';
 
@@ -19,76 +18,6 @@ const SIZES = [
   { id: 'medium', label: 'Med', width: 8 },
   { id: 'thicc', label: 'Thicc', width: 16 },
 ];
-
-const STORAGE_PREFIX = 'bingo_drawing_';
-
-export function useDrawingState(boardId, visitorId) {
-  const [tool, setTool] = useState('brush');
-  const [color, setColor] = useState('#FF0000');
-  const [size, setSize] = useState('medium');
-  const [lines, setLines] = useState([]);
-  const isDrawing = useRef(false);
-  const stageRef = useRef(null);
-
-  const storageKey = `${STORAGE_PREFIX}${boardId}_${visitorId}`;
-
-  useEffect(() => {
-    try {
-      const saved = localStorage.getItem(storageKey);
-      if (saved) setLines(JSON.parse(saved));
-    } catch {}
-  }, [storageKey]);
-
-  useEffect(() => {
-    try {
-      localStorage.setItem(storageKey, JSON.stringify(lines));
-    } catch {}
-  }, [lines, storageKey]);
-
-  const getStrokeProps = useCallback(() => {
-    const sizeObj = SIZES.find((s) => s.id === size);
-    const strokeWidth = sizeObj?.width || 8;
-
-    if (tool === 'eraser') {
-      return { stroke: '#000000', strokeWidth: strokeWidth * 2, globalCompositeOperation: 'destination-out', opacity: 1 };
-    }
-    if (tool === 'highlighter') {
-      return { stroke: color, strokeWidth: strokeWidth * 2.5, globalCompositeOperation: 'source-over', opacity: 0.3 };
-    }
-    return { stroke: color, strokeWidth, globalCompositeOperation: 'source-over', opacity: 1 };
-  }, [tool, color, size]);
-
-  const handlePointerDown = (e) => {
-    isDrawing.current = true;
-    const pos = e.target.getStage().getPointerPosition();
-    setLines((prev) => [...prev, { ...getStrokeProps(), points: [pos.x, pos.y] }]);
-  };
-
-  const handlePointerMove = (e) => {
-    if (!isDrawing.current) return;
-    const pos = e.target.getStage().getPointerPosition();
-    setLines((prev) => {
-      const updated = [...prev];
-      const last = { ...updated[updated.length - 1] };
-      last.points = [...last.points, pos.x, pos.y];
-      updated[updated.length - 1] = last;
-      return updated;
-    });
-  };
-
-  const handlePointerUp = () => { isDrawing.current = false; };
-  const handleClear = () => setLines([]);
-  const handleUndo = () => setLines((prev) => prev.slice(0, -1));
-
-  const currentTool = TOOLS.find((t) => t.id === tool);
-
-  return {
-    tool, setTool, color, setColor, size, setSize,
-    lines, stageRef, currentTool,
-    handlePointerDown, handlePointerMove, handlePointerUp,
-    handleClear, handleUndo,
-  };
-}
 
 export function DrawingToolbar({ tool, setTool, color, setColor, size, setSize, handleUndo, handleClear }) {
   return (

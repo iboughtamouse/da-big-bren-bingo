@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import { useState, useEffect, createContext } from 'react';
+import { useState, useEffect } from 'react';
 import { api } from './lib/api';
+import { AuthContext } from './lib/auth-context';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import Home from './pages/Home';
@@ -8,8 +9,6 @@ import About from './pages/About';
 import BoardEditor from './pages/BoardEditor';
 import BoardPlay from './pages/BoardPlay';
 import './App.css';
-
-export const AuthContext = createContext(null);
 
 function App() {
   const [user, setUser] = useState(null);

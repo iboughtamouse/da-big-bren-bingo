@@ -1,7 +1,10 @@
 import { useState, useEffect, useContext } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
-import { AuthContext } from '../App';
+import { AuthContext } from '../lib/auth-context';
 import { api } from '../lib/api';
+
+const MAX_ITEMS = 500;
+const MAX_ITEM_LENGTH = 255;
 
 export default function BoardEditor() {
   const { id } = useParams();
@@ -54,8 +57,11 @@ export default function BoardEditor() {
       .map((s) => s.trim())
       .filter(Boolean);
 
-  const itemCount = parseItems(itemsText).length;
+  const parsedItems = parseItems(itemsText);
+  const itemCount = parsedItems.length;
   const slotsNeeded = freeSpace ? 24 : 25;
+  const tooManyItems = itemCount > MAX_ITEMS;
+  const itemsThatAreTooLong = parsedItems.filter((item) => item.length > MAX_ITEM_LENGTH).length;
 
   const handleSubmit = async () => {
     if (isEditing && !showEditWarning) {
@@ -63,13 +69,21 @@ export default function BoardEditor() {
       return;
     }
 
-    const items = parseItems(itemsText);
+    const items = parsedItems;
     if (!title.trim()) {
       setError('Give your board a title!');
       return;
     }
     if (items.length < slotsNeeded) {
       setError(`Need at least ${slotsNeeded} items. You have ${items.length}.`);
+      return;
+    }
+    if (items.length > MAX_ITEMS) {
+      setError(`Too many items. Max ${MAX_ITEMS}, got ${items.length}.`);
+      return;
+    }
+    if (itemsThatAreTooLong > 0) {
+      setError(`Each item must be ${MAX_ITEM_LENGTH} characters or fewer. ${itemsThatAreTooLong} item${itemsThatAreTooLong === 1 ? '' : 's'} are too long.`);
       return;
     }
 
@@ -143,7 +157,7 @@ export default function BoardEditor() {
           Bingo Items{' '}
           <span className="label-hint">
             (one per line, or comma-separated — {itemCount} items,{' '}
-            {slotsNeeded} needed)
+            {slotsNeeded} needed, {MAX_ITEMS} max)
           </span>
         </label>
         <textarea
@@ -154,16 +168,24 @@ export default function BoardEditor() {
           rows={15}
         />
         <div className="item-count">
-          {itemCount >= slotsNeeded ? (
+          {itemCount < slotsNeeded ? (
+            <span className="count-bad">
+              ✗ {itemCount}/{slotsNeeded} items — need{' '}
+              {slotsNeeded - itemCount} more
+            </span>
+          ) : tooManyItems ? (
+            <span className="count-bad">
+              ✗ {itemCount} items — max {MAX_ITEMS}
+            </span>
+          ) : itemsThatAreTooLong > 0 ? (
+            <span className="count-bad">
+              ✗ {itemsThatAreTooLong} item{itemsThatAreTooLong === 1 ? '' : 's'} exceed {MAX_ITEM_LENGTH} characters
+            </span>
+          ) : (
             <span className="count-good">
               ✓ {itemCount} items — {itemCount > slotsNeeded
                 ? `each viewer gets a unique board from the pool!`
                 : `everyone gets the same items, shuffled`}
-            </span>
-          ) : (
-            <span className="count-bad">
-              ✗ {itemCount}/{slotsNeeded} items — need{' '}
-              {slotsNeeded - itemCount} more
             </span>
           )}
         </div>
@@ -195,7 +217,7 @@ export default function BoardEditor() {
         )}
         <button
           onClick={handleSubmit}
-          disabled={saving || deleting || itemCount < slotsNeeded}
+          disabled={saving || deleting || itemCount < slotsNeeded || tooManyItems || itemsThatAreTooLong > 0}
           className="btn btn-large"
         >
           {saving

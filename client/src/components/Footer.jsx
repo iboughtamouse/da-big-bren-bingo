@@ -1,15 +1,19 @@
+import { useEffect, useState } from 'react';
 import './Footer.css';
 
 function getVisitorCount() {
   const base = 8413;
   const stored = sessionStorage.getItem('bren-bingo-visits');
-  const val = stored ? Number(stored) : base + Math.floor(Math.random() * 200);
-  sessionStorage.setItem('bren-bingo-visits', String(val + 1));
-  return val;
+  return stored ? Number(stored) : base + Math.floor(Math.random() * 200);
 }
 
 function Footer() {
-  const count = getVisitorCount();
+  const [count] = useState(() => getVisitorCount());
+
+  useEffect(() => {
+    sessionStorage.setItem('bren-bingo-visits', String(count + 1));
+  }, [count]);
+
   const digits = String(count).padStart(6, '0').split('');
 
   return (
