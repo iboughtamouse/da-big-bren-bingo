@@ -36,7 +36,17 @@ Branch naming does not need to be fancy. Simple names are fine:
 - `fix/board-validation`
 - `chore/add-test-harness`
 
-Commit messages should be short and descriptive. Conventional commits are fine, but not required.
+Commit messages should use conventional commit format.
+
+Examples:
+
+- `feat: allow custom free space text`
+- `fix: keep viewer drawings scoped per board`
+- `chore: add pull request template`
+
+This repo uses Husky + commitlint to check commit messages locally.
+
+PR titles should also use conventional commit format. That is enforced in GitHub Actions because local hooks cannot validate PR metadata.
 
 ## Pull Request Standard
 
@@ -49,6 +59,8 @@ Each PR should answer three questions:
 3. What is still risky, deferred, or unverified?
 
 If a diff is huge, that is usually a sign it should be split.
+
+The PR title is expected to be the eventual squash-merge title, so keep it conventional and reviewable.
 
 ## Testing Philosophy
 
@@ -80,8 +92,11 @@ Right now there is not a full automated test suite in place, so use the lightest
 
 Current baseline:
 
+- repo-wide checks: `npm run lint` and `npm run build`
 - client changes: `cd client && npm run lint` and `cd client && npm run build`
 - backend or full-stack changes: targeted API or local smoke tests in addition to the above when relevant
+
+GitHub Actions runs the repo-wide lint and build checks on pull requests. Keep local verification aligned with that so CI does not become your first feedback loop.
 
 As automated tests are added, prioritize these first:
 
