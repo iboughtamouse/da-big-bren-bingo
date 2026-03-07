@@ -16,7 +16,7 @@
     "client"
   ],
   "scripts": {
-    "prepare": "husky",
+    "prepare": "node .husky/install.mjs",
     "commitlint": "commitlint --edit",
     "lint:client": "npm run lint --workspace=client",
     "lint:server": "npm run lint --workspace=server",
