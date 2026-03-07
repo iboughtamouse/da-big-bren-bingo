@@ -69,5 +69,5 @@ Schema auto-initializes on startup via `db/schema.sql`. Tables:
 
 - **session** — Express sessions (connect-pg-simple)
 - **users** — Discord-authenticated admins
-- **boards** — Bingo boards with title, free space toggle
+- **boards** — Bingo boards with title, free space toggle, and optional free-space text
 - **board_items** — Item pool per board with sort order

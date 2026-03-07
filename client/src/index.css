@@ -419,6 +419,14 @@ a:hover {
   accent-color: var(--color-accent);
 }
 
+.free-space-text-group {
+  margin-top: -0.25rem;
+  padding: 0.85rem 1rem 0.95rem;
+  background: rgba(0, 255, 255, 0.06);
+  border: 2px ridge rgba(0, 255, 255, 0.45);
+  box-shadow: inset 0 0 12px rgba(0, 255, 255, 0.08);
+}
+
 .item-count {
   margin-top: 0.4rem;
   font-size: 0.85rem;

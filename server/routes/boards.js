@@ -8,6 +8,7 @@ const router = Router();
 const MAX_ITEMS = 500;
 const MAX_ITEM_LENGTH = 255;
 const MAX_TITLE_LENGTH = 255;
+const DEFAULT_FREE_SPACE_TEXT = 'FREE';
 
 function normalizeItems(items) {
   if (!Array.isArray(items)) {
@@ -19,7 +20,20 @@ function normalizeItems(items) {
     .filter(Boolean);
 }
 
-function validateBoardPayload(title, items, freeSpace) {
+function normalizeFreeSpaceText(freeSpace, freeSpaceText) {
+  if (freeSpace === false) {
+    return null;
+  }
+
+  if (typeof freeSpaceText !== 'string') {
+    return DEFAULT_FREE_SPACE_TEXT;
+  }
+
+  const normalized = freeSpaceText.trim();
+  return normalized || DEFAULT_FREE_SPACE_TEXT;
+}
+
+function validateBoardPayload(title, items, freeSpace, freeSpaceText) {
   if (!title || !title.trim()) {
     return 'Title is required';
   }
@@ -50,6 +64,11 @@ function validateBoardPayload(title, items, freeSpace) {
     return `Each item must be ${MAX_ITEM_LENGTH} characters or fewer`;
   }
 
+  const normalizedFreeSpaceText = normalizeFreeSpaceText(freeSpace, freeSpaceText);
+  if (normalizedFreeSpaceText && normalizedFreeSpaceText.length > MAX_ITEM_LENGTH) {
+    return `Free space text must be ${MAX_ITEM_LENGTH} characters or fewer`;
+  }
+
   return null;
 }
 
@@ -64,14 +83,15 @@ router.get('/', requireAuth, async (req, res) => {
 
 // Create a new board
 router.post('/', requireAuth, async (req, res) => {
-  const { title, items, freeSpace } = req.body;
-  const validationError = validateBoardPayload(title, items, freeSpace);
+  const { title, items, freeSpace, freeSpaceText } = req.body;
+  const validationError = validateBoardPayload(title, items, freeSpace, freeSpaceText);
 
   if (validationError) {
     return res.status(400).json({ error: validationError });
   }
 
   const normalizedItems = normalizeItems(items);
+  const normalizedFreeSpaceText = normalizeFreeSpaceText(freeSpace, freeSpaceText);
 
   const boardId = nanoid(12);
   const client = await pool.connect();
@@ -80,8 +100,8 @@ router.post('/', requireAuth, async (req, res) => {
     await client.query('BEGIN');
 
     await client.query(
-      `INSERT INTO boards (id, user_id, title, free_space) VALUES ($1, $2, $3, $4)`,
-      [boardId, req.user.id, title.trim(), freeSpace !== false]
+      `INSERT INTO boards (id, user_id, title, free_space, free_space_text) VALUES ($1, $2, $3, $4, $5)`,
+      [boardId, req.user.id, title.trim(), freeSpace !== false, normalizedFreeSpaceText]
     );
 
     for (let i = 0; i < normalizedItems.length; i++) {
@@ -125,6 +145,7 @@ router.get('/:id', async (req, res) => {
       id: board.id,
       title: board.title,
       freeSpace: board.free_space,
+      freeSpaceText: board.free_space_text || DEFAULT_FREE_SPACE_TEXT,
       itemCount: itemsResult.rows.length,
       createdAt: board.created_at,
       updatedAt: board.updated_at,
@@ -138,8 +159,8 @@ router.get('/:id', async (req, res) => {
 // Update a board
 router.put('/:id', requireAuth, async (req, res) => {
   const { id } = req.params;
-  const { title, items, freeSpace } = req.body;
-  const validationError = validateBoardPayload(title, items, freeSpace);
+  const { title, items, freeSpace, freeSpaceText } = req.body;
+  const validationError = validateBoardPayload(title, items, freeSpace, freeSpaceText);
 
   // Verify ownership
   const boardResult = await pool.query('SELECT * FROM boards WHERE id = $1', [id]);
@@ -155,6 +176,7 @@ router.put('/:id', requireAuth, async (req, res) => {
   }
 
   const normalizedItems = normalizeItems(items);
+  const normalizedFreeSpaceText = normalizeFreeSpaceText(freeSpace, freeSpaceText);
 
   const client = await pool.connect();
 
@@ -162,8 +184,8 @@ router.put('/:id', requireAuth, async (req, res) => {
     await client.query('BEGIN');
 
     await client.query(
-      `UPDATE boards SET title = $1, free_space = $2, updated_at = NOW() WHERE id = $3`,
-      [title.trim(), freeSpace !== false, id]
+      `UPDATE boards SET title = $1, free_space = $2, free_space_text = $3, updated_at = NOW() WHERE id = $4`,
+      [title.trim(), freeSpace !== false, normalizedFreeSpaceText, id]
     );
 
     // Replace all items
@@ -231,6 +253,7 @@ router.get('/:id/play', async (req, res) => {
       id: board.id,
       title: board.title,
       freeSpace: board.free_space,
+      freeSpaceText: board.free_space_text || DEFAULT_FREE_SPACE_TEXT,
     },
     grid,
   });

@@ -72,6 +72,7 @@ CREATE TABLE boards (
     user_id       INTEGER NOT NULL REFERENCES users(id),
     title         VARCHAR(255) NOT NULL,
     free_space    BOOLEAN DEFAULT true,
+    free_space_text VARCHAR(255),
     created_at    TIMESTAMPTZ DEFAULT NOW(),
     updated_at    TIMESTAMPTZ DEFAULT NOW()
 );
@@ -133,7 +134,7 @@ else:
 grid = seededShuffle(selected, rng)
 
 if freeSpace:
-    grid[12] = "FREE"  // center of 5×5 (index 12)
+    grid[12] = freeSpaceText || "FREE"  // center of 5×5 (index 12)
 ```
 
 Including `board.updatedAt` in the seed means that if the admin edits the board, everyone gets a fresh shuffle. This is intentional — prevents stale boards after edits.

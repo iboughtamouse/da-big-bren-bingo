@@ -5,6 +5,7 @@ import { api } from '../lib/api';
 
 const MAX_ITEMS = 500;
 const MAX_ITEM_LENGTH = 255;
+const DEFAULT_FREE_SPACE_TEXT = 'FREE';
 
 export default function BoardEditor() {
   const { id } = useParams();
@@ -19,6 +20,7 @@ export default function BoardEditor() {
   const [title, setTitle] = useState('');
   const [itemsText, setItemsText] = useState('');
   const [freeSpace, setFreeSpace] = useState(true);
+  const [freeSpaceText, setFreeSpaceText] = useState(DEFAULT_FREE_SPACE_TEXT);
   const [loading, setLoading] = useState(isEditing);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState(null);
@@ -38,6 +40,7 @@ export default function BoardEditor() {
         }
         setTitle(data.board.title);
         setFreeSpace(data.board.freeSpace);
+        setFreeSpaceText(data.board.freeSpaceText || DEFAULT_FREE_SPACE_TEXT);
         setItemsText(data.items.join('\n'));
       })
       .catch((err) => setError(err.message))
@@ -62,6 +65,8 @@ export default function BoardEditor() {
   const slotsNeeded = freeSpace ? 24 : 25;
   const tooManyItems = itemCount > MAX_ITEMS;
   const itemsThatAreTooLong = parsedItems.filter((item) => item.length > MAX_ITEM_LENGTH).length;
+  const normalizedFreeSpaceText = freeSpaceText.trim() || DEFAULT_FREE_SPACE_TEXT;
+  const freeSpaceTextTooLong = freeSpace && normalizedFreeSpaceText.length > MAX_ITEM_LENGTH;
 
   const handleSubmit = async () => {
     if (isEditing && !showEditWarning) {
@@ -86,16 +91,20 @@ export default function BoardEditor() {
       setError(`Each item must be ${MAX_ITEM_LENGTH} characters or fewer. ${itemsThatAreTooLong} item${itemsThatAreTooLong === 1 ? '' : 's'} are too long.`);
       return;
     }
+    if (freeSpaceTextTooLong) {
+      setError(`Free space text must be ${MAX_ITEM_LENGTH} characters or fewer.`);
+      return;
+    }
 
     setSaving(true);
     setError(null);
 
     try {
       if (isEditing) {
-        await api.updateBoard(id, { title, items, freeSpace });
+        await api.updateBoard(id, { title, items, freeSpace, freeSpaceText: normalizedFreeSpaceText });
         navigate(`/board/${id}`);
       } else {
-        const data = await api.createBoard({ title, items, freeSpace });
+        const data = await api.createBoard({ title, items, freeSpace, freeSpaceText: normalizedFreeSpaceText });
         navigate(`/board/${data.id}`);
       }
     } catch (err) {
@@ -202,6 +211,36 @@ export default function BoardEditor() {
         </label>
       </div>
 
+      {freeSpace && (
+        <div className="form-group free-space-text-group">
+          <label htmlFor="free-space-text">
+            Free Space Text{' '}
+            <span className="label-hint">
+              (optional custom center text, defaults to {DEFAULT_FREE_SPACE_TEXT})
+            </span>
+          </label>
+          <input
+            id="free-space-text"
+            type="text"
+            value={freeSpaceText}
+            onChange={(e) => setFreeSpaceText(e.target.value)}
+            placeholder={DEFAULT_FREE_SPACE_TEXT}
+            maxLength={255}
+          />
+          <div className="item-count">
+            {freeSpaceTextTooLong ? (
+              <span className="count-bad">
+                ✗ Free space text exceeds {MAX_ITEM_LENGTH} characters
+              </span>
+            ) : (
+              <span className="count-good">
+                ✓ Center square will say “{normalizedFreeSpaceText}”
+              </span>
+            )}
+          </div>
+        </div>
+      )}
+
       {showEditWarning && (
         <div className="confirm-banner">
           🚨 Are you sure? This will scramble everyone's boards. Hit save again
@@ -217,7 +256,7 @@ export default function BoardEditor() {
         )}
         <button
           onClick={handleSubmit}
-          disabled={saving || deleting || itemCount < slotsNeeded || tooManyItems || itemsThatAreTooLong > 0}
+          disabled={saving || deleting || itemCount < slotsNeeded || tooManyItems || itemsThatAreTooLong > 0 || freeSpaceTextTooLong}
           className="btn btn-large"
         >
           {saving

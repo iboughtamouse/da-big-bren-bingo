@@ -22,9 +22,12 @@ CREATE TABLE IF NOT EXISTS boards (
   user_id       INTEGER NOT NULL REFERENCES users(id),
   title         VARCHAR(255) NOT NULL,
   free_space    BOOLEAN DEFAULT true,
+  free_space_text VARCHAR(255),
   created_at    TIMESTAMPTZ DEFAULT NOW(),
   updated_at    TIMESTAMPTZ DEFAULT NOW()
 );
+
+ALTER TABLE boards ADD COLUMN IF NOT EXISTS free_space_text VARCHAR(255);
 
 -- Item pool for each board
 CREATE TABLE IF NOT EXISTS board_items (
