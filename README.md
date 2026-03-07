@@ -60,6 +60,8 @@ This runs the Express API on `http://localhost:3000` and Vite dev server on `htt
 
 | Command              | Description                            |
 | -------------------- | -------------------------------------- |
+| `npm run lint`       | Run client and server lint checks      |
+| `npm run build`      | Build the client app                   |
 | `npm run dev`        | Start server + client simultaneously   |
 | `npm run dev:server` | Start Express API only (port 3000)     |
 | `npm run dev:client` | Start Vite dev server only (port 5173) |

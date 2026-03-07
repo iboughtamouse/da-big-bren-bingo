@@ -92,8 +92,11 @@ Right now there is not a full automated test suite in place, so use the lightest
 
 Current baseline:
 
+- repo-wide checks: `npm run lint` and `npm run build`
 - client changes: `cd client && npm run lint` and `cd client && npm run build`
 - backend or full-stack changes: targeted API or local smoke tests in addition to the above when relevant
+
+GitHub Actions runs the repo-wide lint and build checks on pull requests. Keep local verification aligned with that so CI does not become your first feedback loop.
 
 As automated tests are added, prioritize these first:
 
